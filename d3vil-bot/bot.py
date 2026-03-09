@@ -2,7 +2,7 @@ import os
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-TOKEN = os.getenv("8506879373:AAGqdWa3RNJUbatMJeEZy53hKtOdpLCz5C0")
+TOKEN = os.getenv("BOT_TOKEN")
 
 # START MENU
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
