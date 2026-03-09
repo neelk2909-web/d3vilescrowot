@@ -1,32 +1,79 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import os
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-TOKEN = "8606167168:AAGiUyxVwHjMkOqgZHOY61XBN8phc_4l_Mg"
+TOKEN = os.getenv("8506879373:AAGqdWa3RNJUbatMJeEZy53hKtOdpLCz5C0")
 
+# START MENU
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("""
-💫 Welcome to D3VIL Escrows 💫
-Your Trustworthy Telegram Escrow Service
+    keyboard = [
+        ["Create Deal", "Help"],
+        ["Dispute"]
+    ]
 
-Welcome to @d3vil_escrowbot. This bot provides a reliable escrow service for your transactions on Telegram.
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
-Avoid scams, your funds are safeguarded throughout your deals. If you run into any issues, simply type /dispute and an arbitrator will join the group chat within 24 hours.
+    text = """
+💫 Welcome to Pagal Escrow Bot 💫
 
-🎟 ESCROW FEE:
-1.0% for P2P and 1.0% for OTC Flat
+Safe & Secure Telegram Escrow Service
 
-🌐 UPDATES & VOUCHES:
-@thed3vilnetwork
+Commands:
+/deal - Create new deal
+/release - Release funds
+/dispute - Open dispute
+/help - Help menu
+"""
 
-💬 Proceed with /escrow (to start with a new escrow)
+    await update.message.reply_text(text, reply_markup=reply_markup)
 
-⚠️ IMPORTANT:
-Make sure coin is same of Buyer and Seller else you may lose your coin.
 
-💡 Type /menu to summon a menu with all bots features
-""")
-app = ApplicationBuilder().token(TOKEN).build()
+# CREATE DEAL
+async def deal(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "📝 Send deal details in format:\n\nBuyer @username\nSeller @username\nAmount\nDescription"
+    )
 
-app.add_handler(CommandHandler("start", start))
 
-app.run_polling()
+# RELEASE FUNDS
+async def release(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "✅ Funds released to seller."
+    )
+
+
+# DISPUTE
+async def dispute(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "⚠️ Dispute opened.\nAdmin will join within 24 hours."
+    )
+
+
+# HELP
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        """
+Help Menu
+
+/deal - Create escrow deal
+/release - Release funds
+/dispute - Open dispute
+"""
+    )
+
+
+def main():
+    app = Application.builder().token(TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("deal", deal))
+    app.add_handler(CommandHandler("release", release))
+    app.add_handler(CommandHandler("dispute", dispute))
+    app.add_handler(CommandHandler("help", help_command))
+
+    print("Bot running...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
